@@ -17,13 +17,14 @@ func router() *gin.Engine {
 
 	r.GET("/user", ctrl.GetAllUsers)
 	r.GET("/user/:id", ctrl.GetOneUser)
-	r.POST("/user", ctrl.InsertUser)
+	r.POST("/user", ctrl.AddUser)
 	r.DELETE("/user/:id", ctrl.DeleteUser)
 
 	r.GET("/tag", ctrl.GetAllTags)
 	r.GET("/tag/:id", ctrl.GetOneTag)
-	r.POST("/tag", ctrl.InsertTag)
+	r.POST("/tag", ctrl.AddTag)
 	r.DELETE("/tag/:id", ctrl.DeleteTag)
 
+	r.POST("/combine", ctrl.UserTagCombine)
 	return r
 }

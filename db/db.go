@@ -37,8 +37,8 @@ func GetOneUser(n string) (*models.User, error) {
 	return models.FindUser(context.Background(), db, id)
 }
 
-// user Insert
-func InsertUser(name string) error {
+// user add
+func AddUser(name string) error {
 	user := models.User{
 		Name: name,
 	}
@@ -72,14 +72,15 @@ func GetOneTag(n string) (*models.Tag, error) {
 	return models.FindTag(context.Background(), db, id)
 }
 
-//tag insert
-func InsertTag(name string) error {
+//tag add
+func AddTag(name string) error {
 	tag := models.Tag{
 		Name: name,
 	}
 	return tag.Insert(context.Background(), db, boil.Infer())
 }
 
+// delete tag
 func DeleteTag(n string) error {
 	id, err := strconv.Atoi(n)
 	if err != nil {
@@ -89,4 +90,21 @@ func DeleteTag(n string) error {
 	tag := models.Tag{ID: id}
 	_, err = tag.Delete(context.Background(), db)
 	return err
+}
+
+func UserTagCombine(sUserId string, sTagId string) error {
+	iUserID, err := strconv.Atoi(sUserId)
+	if err != nil {
+		return err
+	}
+	iTagID, err := strconv.Atoi(sTagId)
+	if err != nil {
+		return err
+	}
+
+	userTagMap := models.UserTagMap{
+		UserID: iUserID,
+		TagID:  iTagID,
+	}
+	return userTagMap.Insert(context.Background(), db, boil.Infer())
 }

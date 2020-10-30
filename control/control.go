@@ -31,10 +31,10 @@ func (Controller) GetOneUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"user": user})
 }
 
-// Insert User
-func (Controller) InsertUser(c *gin.Context) {
+// Add User
+func (Controller) AddUser(c *gin.Context) {
 	name := c.PostForm("name")
-	err := db.InsertUser(name)
+	err := db.AddUser(name)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -86,10 +86,10 @@ func (Controller) GetOneTag(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"tag": tag})
 }
 
-//Insert Tag
-func (Controller) InsertTag(c *gin.Context) {
+//Add Tag
+func (Controller) AddTag(c *gin.Context) {
 	name := c.PostForm("name")
-	err := db.InsertTag(name)
+	err := db.AddTag(name)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
@@ -111,5 +111,29 @@ func (Controller) DeleteTag(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 	c.JSON(http.StatusOK, gin.H{"deleted tag": deletedTag})
+}
 
+// Combine
+func (Controller) UserTagCombine(c *gin.Context) {
+	userID := c.PostForm("userID")
+	tagID := c.PostForm("tagID")
+
+	err := db.UserTagCombine(userID, tagID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, err := db.GetOneUser(userID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	tag, err := db.GetOneTag(tagID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"combine": user.Name + ", " + tag.Name})
 }
