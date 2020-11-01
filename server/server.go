@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"sql_multiple1/control"
 )
@@ -12,10 +13,13 @@ func Init() {
 
 func router() *gin.Engine {
 	r := gin.Default()
+	r.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"localhost:3000"},
+	}))
 
 	ctrl := control.Controller{}
 
-	r.GET("/user", ctrl.GetAllUsers)
+	r.GET("/users", ctrl.GetAllUsers)
 	r.GET("/user/:id", ctrl.GetOneUser)
 	r.POST("/user", ctrl.AddUser)
 	r.DELETE("/user/:id", ctrl.DeleteUser)
